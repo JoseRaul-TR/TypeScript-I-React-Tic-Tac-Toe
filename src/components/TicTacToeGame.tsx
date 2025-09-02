@@ -62,22 +62,48 @@ export default function TicTacToeGame() {
   }
 
   return (
-    <div className="">
-      <div className="">
-        <h1>Tic Tac Toe</h1>
-        <div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-[90%] max-w-md flex flex-col items-center gap-6">
+        {/* Title */}
+        <h1 className="text-center text-3xl font-extrabold tracking-wide">
+          🎮 Tic Tac Toe 🎮
+        </h1>
+        {/* Board */}
+        <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full">
           {board.map((cell, index) => (
-            <button key={index} onClick={() => handleClick(index)} className="">
+            <button
+              key={index}
+              onClick={() => handleClick(index)}
+              className="aspect-square text-4xl font-bold border border-gray-300 flex items-center justify-center bg-gray-50 hover:bg-gray-200 hover:cursor-pointer rounded-xl shadow-sm transition-all transform hover:scale-105 active:scale-95 duration-200"
+            >
               {cell}
             </button>
           ))}
         </div>
-        <div className="">
-          {winner && <p> Grattis! {winner} vinner!</p>}
-          {isDraw && <p>Ett oavgjort resultat!</p>}
-          {!winner && !isDraw && <p>Nästa spelare: {currentPlayer}</p>}
+        {/* Status */}
+        <div className="text-center text-lg font-medium min-h-8">
+          {winner && (
+            <p className="text-green-600 font-semibold">
+              {" "}
+              Grattis! {winner} vinner!
+            </p>
+          )}
+          {isDraw && (
+            <p className="text-yellow-600 font-semibold">
+              Ett oavgjort resultat!
+            </p>
+          )}
+          {!winner && !isDraw && (
+            <p>
+              Nästa spelare: <span className="font-bold">{currentPlayer}</span>
+            </p>
+          )}
         </div>
-        <button onClick={resetGame} className="">
+        {/* Reset Button */}
+        <button
+          onClick={resetGame}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md text-white font-semibold hover:cursor-pointer transition-all transform hover:scale-105 active:scale-95 duration-200"
+        >
           Starta om spelet
         </button>
       </div>
