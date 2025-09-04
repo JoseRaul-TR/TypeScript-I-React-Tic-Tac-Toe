@@ -3,6 +3,7 @@ import { checkWin, checkDraw } from "../utils/gameLogic";
 import { useState } from "react";
 
 export default function TicTacToeGame() {
+  const [boardSize, setBoardSize] = useState<number>(3);
   const [board, setBoard] = useState<Cell[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [winner, setWinner] = useState<Player | null>(null);
@@ -15,7 +16,7 @@ export default function TicTacToeGame() {
     newBoard[index] = currentPlayer;
     setBoard(newBoard);
 
-    if (checkWin(newBoard, currentPlayer)) {
+    if (checkWin(newBoard, currentPlayer, boardSize)) {
       setWinner(currentPlayer);
       return;
     }
@@ -28,8 +29,9 @@ export default function TicTacToeGame() {
     setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   }
 
-  function resetGame() {
-    setBoard(Array(9).fill(null));
+  function resetGame(size = boardSize) {
+    setBoardSize(size);
+    setBoard(Array(size * size).fill(null));
     setCurrentPlayer("X");
     setWinner(null);
     setIsDraw(false);
@@ -42,8 +44,32 @@ export default function TicTacToeGame() {
         <h1 className="text-center text-3xl font-extrabold tracking-wide">
           🎮 Tic Tac Toe 🎮
         </h1>
+        {/* Board Size Selector */}
+        <div className="flex gap-2 items-center">
+          <label htmlFor="boardSize" className="font-medium">
+            Storlek:
+          </label>
+          <select
+            id="boardSize"
+            value={boardSize}
+            onChange={(e) => resetGame(Number(e.target.value))}
+            className="border border-gray-400 rounded-lg p-1"
+          >
+            {[3, 4, 5, 6].map((size) => (
+              <option key={size} value={size}>
+                {size} x {size}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* Board */}
-        <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full">
+        <div
+          className="grid gap-3 w-full"
+          style={{
+            gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
+          }}
+        >
           {board.map((cell, index) => (
             <button
               key={index}
@@ -75,7 +101,7 @@ export default function TicTacToeGame() {
         </div>
         {/* Reset Button */}
         <button
-          onClick={resetGame}
+          onClick={() => resetGame()}
           className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md text-white font-semibold hover:cursor-pointer transition-all transform hover:scale-105 active:scale-95 duration-200"
         >
           Starta om spelet

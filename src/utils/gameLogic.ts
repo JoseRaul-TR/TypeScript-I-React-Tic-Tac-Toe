@@ -1,25 +1,29 @@
 import type { Cell, Player } from "../types/types";
 
-// Winning patterns
-const winPatterns: number[][] = [
-    // rows
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    // columns
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    // diagonals
-    [0, 4, 8],
-    [2, 4, 6],
-];
-
 // Function to check winner
-export function checkWin(board: Cell[], player: Player): boolean {
-    return winPatterns.some((pattern) =>
-        pattern.every((index) => board[index] === player)
-    );
+export function checkWin(board: Cell[], player: Player, boardSize: number): boolean {
+    // Rows
+    for (let row = 0; row < boardSize; row++) {
+        if (board.slice(row * boardSize, (row + 1) * boardSize).every(c => c === player)) {
+            return true;
+        }
+    }
+    // Columns
+    for (let col = 0; col < boardSize; col++) {
+        if (board.filter((_, i) => i % boardSize === col).every(c => c === player)) {
+            return true;
+        }
+    }
+    // Diagonal ↘
+    if (Array.from({ length: boardSize }, (_, i) => board[i * boardSize + i]).every(c => c === player)) {
+        return true;
+    }
+    // Diagonal ↙
+    if (Array.from({ length: boardSize }, (_, i) => board[i * boardSize + (boardSize -1 - i)]).every(c => c === player)) {
+        return true;
+    }
+
+    return false;
 }
 
 // Function to check draw
