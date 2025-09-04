@@ -3,8 +3,8 @@ import { checkWin, checkDraw } from "../utils/gameLogic";
 import { useState } from "react";
 
 export default function TicTacToeGame() {
-  const [boardSize, setBoardSize] = useState<number>(3);
-  const [board, setBoard] = useState<Cell[]>(Array(9).fill(null));
+  const [boardSize, setBoardSize] = useState<number>(3); // Default board 3x3
+  const [board, setBoard] = useState<Cell[]>(Array(boardSize * boardSize).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [winner, setWinner] = useState<Player | null>(null);
   const [isDraw, setIsDraw] = useState(false);
