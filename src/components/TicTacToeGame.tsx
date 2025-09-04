@@ -4,7 +4,9 @@ import { useState } from "react";
 
 export default function TicTacToeGame() {
   const [boardSize, setBoardSize] = useState<number>(3); // Default board 3x3
-  const [board, setBoard] = useState<Cell[]>(Array(boardSize * boardSize).fill(null));
+  const [board, setBoard] = useState<Cell[]>(
+    Array(boardSize * boardSize).fill(null)
+  );
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [winner, setWinner] = useState<Player | null>(null);
   const [isDraw, setIsDraw] = useState(false);
@@ -44,24 +46,21 @@ export default function TicTacToeGame() {
         <h1 className="text-center text-3xl font-extrabold tracking-wide">
           🎮 Tic Tac Toe 🎮
         </h1>
+
         {/* Board Size Selector */}
         <div className="flex gap-2 items-center">
           <label htmlFor="boardSize" className="font-medium">
-            Storlek:
+            Brädstorlek:
           </label>
-          <select
+          <input
             id="boardSize"
             value={boardSize}
             onChange={(e) => resetGame(Number(e.target.value))}
             className="border border-gray-400 rounded-lg p-1"
-          >
-            {[3, 4, 5, 6].map((size) => (
-              <option key={size} value={size}>
-                {size} x {size}
-              </option>
-            ))}
-          </select>
+          />
+          ({boardSize} x {boardSize})
         </div>
+
         {/* Board */}
         <div
           className="grid gap-3 w-full"
@@ -74,12 +73,17 @@ export default function TicTacToeGame() {
             <button
               key={index}
               onClick={() => handleClick(index)}
-              className="aspect-square text-4xl font-bold border border-gray-300 flex items-center justify-center bg-gray-50 hover:bg-gray-200 hover:cursor-pointer rounded-xl shadow-sm transition-all transform hover:scale-105 active:scale-95 duration-200"
+              className="aspect-square font-bold border border-gray-300 flex items-center justify-center 
+              bg-gray-50 hover:bg-gray-200 hover:cursor-pointer 
+              rounded-xl shadow-sm transition-all transform hover:scale-105 active:scale-95 duration-200"
             >
-              {cell}
+              <span className="text-[clamp(1rem,4vw,3rem)] leading-none">
+                {cell ?? ""}
+              </span>
             </button>
           ))}
         </div>
+
         {/* Status */}
         <div className="text-center text-lg font-medium min-h-8">
           {winner && (
@@ -99,6 +103,7 @@ export default function TicTacToeGame() {
             </p>
           )}
         </div>
+
         {/* Reset Button */}
         <button
           onClick={() => resetGame()}
