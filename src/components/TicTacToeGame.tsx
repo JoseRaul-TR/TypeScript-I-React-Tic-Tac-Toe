@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Board, Cell, Player } from "../types/types";
+import type { Board, Player } from "../types/types";
 import { checkWin, checkDraw } from "../utils/gameLogic";
 import GameControls from "./GameControls";
 import GameBoard from "./GameBoard";
