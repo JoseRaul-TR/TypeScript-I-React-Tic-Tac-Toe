@@ -7,7 +7,7 @@ import type { Board, Player } from "../types/types";
  * @param winLength How many in a row are required to win
  * @param row Row index of the last move
  * @param col Column index of the last move
- * @returns true if th player has won, otherwise false
+ * @returns true if the player has won, otherwise false
  */
 export function checkWin(
     board: Board,
