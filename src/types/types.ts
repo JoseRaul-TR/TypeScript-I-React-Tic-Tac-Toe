@@ -14,3 +14,5 @@ export type GameState = {
 export type GameAction =
     | { type: "MAKE_MOVE"; row: number; col: number }
     | { type: "RESET"; size?: number; win?: number };
+
+export type Theme = "light" | "dark";
