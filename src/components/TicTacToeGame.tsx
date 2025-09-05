@@ -4,9 +4,8 @@ import { useState } from "react";
 
 export default function TicTacToeGame() {
   const [boardSize, setBoardSize] = useState<number>(3); // Default board 3x3
-  const [board, setBoard] = useState<Cell[]>(
-    Array(boardSize * boardSize).fill(null)
-  );
+  const [winLength, setWinLength] = useState<number>(3); // Default winning for default board (3x3)
+  const [board, setBoard] = useState<Cell[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [winner, setWinner] = useState<Player | null>(null);
   const [isDraw, setIsDraw] = useState(false);
@@ -18,7 +17,7 @@ export default function TicTacToeGame() {
     newBoard[index] = currentPlayer;
     setBoard(newBoard);
 
-    if (checkWin(newBoard, currentPlayer, boardSize)) {
+    if (checkWin(newBoard, currentPlayer, boardSize, winLength)) {
       setWinner(currentPlayer);
       return;
     }
@@ -31,9 +30,15 @@ export default function TicTacToeGame() {
     setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   }
 
-  function resetGame(size = boardSize) {
-    setBoardSize(size);
-    setBoard(Array(size * size).fill(null));
+  // Function to reset game
+  function resetGame(size = boardSize, win = winLength) {
+    // Set limits to board and winning combination
+    const clampedSize = Math.max(3, Math.min(size, 7));
+    const clampedWin = Math.max(3, Math.min(win, clampedSize));
+
+    setBoardSize(clampedSize);
+    setWinLength(clampedWin);
+    setBoard(Array(clampedSize * clampedSize).fill(null));
     setCurrentPlayer("X");
     setWinner(null);
     setIsDraw(false);
@@ -46,24 +51,51 @@ export default function TicTacToeGame() {
         <h1 className="text-center text-3xl font-extrabold tracking-wide">
           🎮 Tic Tac Toe 🎮
         </h1>
+        {/* Board Settings */}
+        <div className="flex flex-col gap-4 items-center">
+          {/* Board Size Selector */}
+          <div className="flex gap-2 items-center">
+            <label htmlFor="boardSize" className="font-medium">
+              Brädstorlek:
+            </label>
+            <input
+              id="boardSize"
+              type="number"
+              min={3}
+              max={7}
+              value={boardSize}
+              onChange={(e) => resetGame(Number(e.target.value), winLength)}
+              className="border border-gray-400 rounded-lg p-1 w-16 text-center"
+            />
+            ({boardSize} x {boardSize})
+          </div>
 
-        {/* Board Size Selector */}
-        <div className="flex gap-2 items-center">
-          <label htmlFor="boardSize" className="font-medium">
-            Brädstorlek:
-          </label>
-          <input
-            id="boardSize"
-            value={boardSize}
-            onChange={(e) => resetGame(Number(e.target.value))}
-            className="border border-gray-400 rounded-lg p-1"
-          />
-          ({boardSize} x {boardSize})
+          {/* Win Lenght Selector */}
+          <div className="flex gap-2 items-center">
+            <label htmlFor="winLength" className="font-medium">
+              Vinst längd:
+            </label>
+            <select
+              id="winLength"
+              value={winLength}
+              onChange={(e) => resetGame(boardSize, Number(e.target.value))}
+              className="border border-gray-400 rounded-lg p-1"
+            >
+              {[...Array(boardSize - 2)].map((_, i) => {
+                const len = i + 3;
+                return (
+                  <option key={len} value={len}>
+                    {len} i rad
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
 
         {/* Board */}
         <div
-          className="grid gap-3 w-full"
+          className="grid gap-2 w-full max-w-[min(90vw, 500px)] aspect-square"
           style={{
             gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
@@ -88,7 +120,6 @@ export default function TicTacToeGame() {
         <div className="text-center text-lg font-medium min-h-8">
           {winner && (
             <p className="text-green-600 font-semibold">
-              {" "}
               Grattis! {winner} vinner!
             </p>
           )}
@@ -104,7 +135,7 @@ export default function TicTacToeGame() {
           )}
         </div>
 
-        {/* Reset Button */}
+        {/* Reset Game */}
         <button
           onClick={() => resetGame()}
           className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md text-white font-semibold hover:cursor-pointer transition-all transform hover:scale-105 active:scale-95 duration-200"

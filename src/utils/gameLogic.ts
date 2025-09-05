@@ -1,26 +1,33 @@
 import type { Cell, Player } from "../types/types";
 
 // Function to check winner
-export function checkWin(board: Cell[], player: Player, boardSize: number): boolean {
-    // Rows
+export function checkWin(board: Cell[], player: Player, boardSize: number, winLength: number): boolean {
+
+    // Check a line in any direction
+    const directions = [
+        [0, 1],   // horizontal
+        [1, 0],   // vertical
+        [1, 1],   // diagonal ↘
+        [1, -1],  // diagonal ↙
+    ];
+
     for (let row = 0; row < boardSize; row++) {
-        if (board.slice(row * boardSize, (row + 1) * boardSize).every(c => c === player)) {
-            return true;
+        for (let col = 0; col < boardSize; col++) {
+            if (board[row * boardSize + col] !== player) continue;
+
+            for (const [dRow, dCol] of directions) {
+                let count = 0;
+                let r = row;
+                let c = col;
+
+                while (r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r * boardSize + c] === player) {
+                    count++;
+                    if (count >= winLength) return true;
+                    r += dRow;
+                    c += dCol;
+                }
+            }
         }
-    }
-    // Columns
-    for (let col = 0; col < boardSize; col++) {
-        if (board.filter((_, i) => i % boardSize === col).every(c => c === player)) {
-            return true;
-        }
-    }
-    // Diagonal ↘
-    if (Array.from({ length: boardSize }, (_, i) => board[i * boardSize + i]).every(c => c === player)) {
-        return true;
-    }
-    // Diagonal ↙
-    if (Array.from({ length: boardSize }, (_, i) => board[i * boardSize + (boardSize -1 - i)]).every(c => c === player)) {
-        return true;
     }
 
     return false;
