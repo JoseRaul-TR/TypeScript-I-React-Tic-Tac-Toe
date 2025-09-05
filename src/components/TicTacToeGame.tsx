@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 import { useReducer } from "react";
 import { gameReducer, initialState } from "../reducers/gameReducer";
 import GameControls from "./GameControls";
@@ -7,26 +9,36 @@ import GameStatus from "./GameStatus";
 export default function TicTacToeGame() {
   // useReducer to manage state
   const [state, dispatch] = useReducer(gameReducer, initialState);
+  // useContext
+  const themeCtx = useContext(ThemeContext);
+  if (!themeCtx) throw new Error("TicTacToeGame must be inside ThemeProvider");
+  const { theme, toggleTheme } = themeCtx;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-[90%] max-w-md flex flex-col items-center gap-6">
+    <div className="min-h-screen relative flex items-center justify-center">
+      {/* Game Container */}
+      <div
+        className={`p-8 rounded-2xl shadow-lg w-[90%] max-w-md flex flex-col items-center gap-6
+        ${
+          theme === "dark"
+            ? "bg-gray-800 text-gray-100"
+            : "bg-white text-gray-900"
+        }`}
+      >
         {/* Title */}
         <h1 className="text-center text-3xl font-extrabold tracking-wide">
           🎮 Tic Tac Toe 🎮
         </h1>
+
         {/* Controls */}
         <GameControls
           boardSize={state.boardSize}
           winLength={state.winLength}
-          resetGame={(size, win) => dispatch({ type: "RESET", size, win })}
+          dispatch={dispatch}
         />
 
         {/* Game Board */}
-        <GameBoard
-          board={state.board}
-          handleClick={(row, col) => dispatch({ type: "MAKE_MOVE", row, col })}
-        />
+        <GameBoard board={state.board} dispatch={dispatch} />
 
         {/* Game Status Text */}
         <GameStatus
@@ -42,6 +54,27 @@ export default function TicTacToeGame() {
         >
           Starta nytt spel
         </button>
+      </div>
+
+      {/* Theme switch (ratio slider) */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <span className="text-yellow-400">☀️</span>
+        <label className="relative inline-flex items-center cursor-pointer w-14 h-6">
+          <input
+            type="checkbox"
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+            className="sr-only"
+          />
+          {/* Track */}
+          <div className="w-full h-6 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner transition-colors" />
+          {/* Dot */}
+          <div
+            className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform
+          ${theme === "dark" ? "translate-x-8" : "translate-x-1"}`}
+          />
+        </label>
+        <span className="text-blue-400">🌙</span>
       </div>
     </div>
   );
