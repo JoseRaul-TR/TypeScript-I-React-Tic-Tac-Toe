@@ -1,4 +1,4 @@
-import { ThemeProvider } from "./context/ThemeContext";
+import { ThemeProvider } from "./context/ThemeProvider";
 import TicTacToeGame from "./components/TicTacToeGame";
 
 function App() {
@@ -10,4 +10,3 @@ function App() {
 }
 
 export default App;
-
