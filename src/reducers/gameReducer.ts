@@ -1,17 +1,12 @@
-import type { Board, GameState, GameAction } from "../types/types";
-import { checkWin, checkDraw } from "../utils/gameLogic";
-
-// Helper to create an empty board
-function createEmptyBoard(size: number): Board {
-    return Array.from({ length: size }, () => Array(size).fill(null));
-}
+import type { GameState, GameAction } from "../types/types";
+import { checkWin, checkDraw, createEmptyBoard } from "../utils/gameLogic";
 
 // Reducer for game logic
 export function gameReducer(state: GameState, action: GameAction): GameState {
     switch (action.type) {
         case "MAKE_MOVE": {
             const { row, col } = action;
-            if (state.board[row][col] !== null || state.winner) return state;
+            if (state.board[row][col] !== null || state.winner || state.isDraw) return state;
 
             const newBoard = state.board.map((r) => [...r]);
             newBoard[row][col] = state.currentPlayer;

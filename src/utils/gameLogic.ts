@@ -17,7 +17,6 @@ export function checkWin(
     col: number
 ): boolean {
     const boardSize = board.length; // The board is square, so length = number of row/columns
-
     // Directions to check: each is a vector [rowStep, colStep]
     const directions: Array<[number, number]> = [
         [0, 1],   // horizontal
@@ -77,4 +76,10 @@ export function checkWin(
 export function checkDraw(board: Board): boolean {
     // `every` on rows, then `every` on cells in each row
     return board.every((row) => row.every((cell) => cell !== null));
+}
+
+
+// Helper to create an empty board
+export function createEmptyBoard(size: number): Board {
+    return Array.from({ length: size }, () => Array(size).fill(null));
 }

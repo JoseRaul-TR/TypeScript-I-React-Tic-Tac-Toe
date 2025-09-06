@@ -9,7 +9,11 @@ import GameStatus from "./GameStatus";
 export default function TicTacToeGame() {
   // useReducer to manage state
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  // useContext
+
+  // Determine if the game is over
+  const gameIsOver = state.winner !== null || state.isDraw;
+
+  // Consume theme from useContext
   const themeCtx = useContext(ThemeContext);
   if (!themeCtx) throw new Error("TicTacToeGame must be inside ThemeProvider");
   const { theme, toggleTheme } = themeCtx;
@@ -35,10 +39,15 @@ export default function TicTacToeGame() {
           boardSize={state.boardSize}
           winLength={state.winLength}
           dispatch={dispatch}
+          disabled={gameIsOver}
         />
 
         {/* Game Board */}
-        <GameBoard board={state.board} dispatch={dispatch} />
+        <GameBoard
+          board={state.board}
+          dispatch={dispatch}
+          disabled={gameIsOver}
+        />
 
         {/* Game Status Text */}
         <GameStatus

@@ -5,9 +5,14 @@ import { ThemeContext } from "../context/ThemeContext";
 type GameBoardProps = {
   board: Board;
   dispatch: React.Dispatch<GameAction>;
+  disabled: boolean;
 };
 
-export default function GameBoard({ board, dispatch }: GameBoardProps) {
+export default function GameBoard({
+  board,
+  dispatch,
+  disabled,
+}: GameBoardProps) {
   // Consume ThemeContext
   const themeCtx = useContext(ThemeContext);
   if (!themeCtx) throw new Error("GameBoard must be inside ThemeProvider");
@@ -29,6 +34,7 @@ export default function GameBoard({ board, dispatch }: GameBoardProps) {
           <button
             key={`${r}-${c}`}
             onClick={() => dispatch({ type: "MAKE_MOVE", row: r, col: c })}
+            disabled={disabled}
             className={`aspect-square font-bold border border-gray-300 flex items-center justify-center rounded-xl shadow-sm
               ${
                 theme === "dark"

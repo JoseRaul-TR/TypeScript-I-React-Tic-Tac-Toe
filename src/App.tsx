@@ -1,5 +1,5 @@
-import { ThemeProvider } from "./context/ThemeContext.tsx";
-import TicTacToeGame from "./components/TicTacToeGame.tsx";
+import { ThemeProvider } from "./context/ThemeContext";
+import TicTacToeGame from "./components/TicTacToeGame";
 
 function App() {
   return (
@@ -10,3 +10,4 @@ function App() {
 }
 
 export default App;
+
